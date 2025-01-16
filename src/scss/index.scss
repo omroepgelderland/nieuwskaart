@@ -1,0 +1,59 @@
+@use "./gld-huisstijl.scss";
+
+@use "bootstrap/scss/bootstrap" with (
+  $blue: gld-huisstijl.$gld-kleur-donkerblauw,
+  $indigo: gld-huisstijl.$gld-kleur-paars,
+  $purple: gld-huisstijl.$gld-kleur-paars,
+  $pink: gld-huisstijl.$gld-kleur-roze,
+  $red: gld-huisstijl.$gld-kleur-rood,
+  $orange: gld-huisstijl.$gld-kleur-oranje,
+  $yellow: gld-huisstijl.$gld-kleur-geel,
+  $green: gld-huisstijl.$gld-kleur-donkergroen,
+  // $teal:;
+  $cyan: gld-huisstijl.$gld-kleur-lichtblauw,
+  
+  $primary: gld-huisstijl.$gld-kleur-corporate1,
+  $link-color: gld-huisstijl.$gld-kleur-corporate2
+);
+
+@use "bootstrap-icons/font/bootstrap-icons.scss" with(
+  $bootstrap-icons-font-dir: "~bootstrap-icons/font/fonts"
+);
+
+@import "leaflet/dist/leaflet.css";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+#overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  #menu {
+    min-height: 120px;
+
+    .card-body {
+      width: 300px;
+    }
+  }
+}
+
+.btn-white {
+  @include bootstrap.button-variant(white, black);
+}
