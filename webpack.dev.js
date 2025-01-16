@@ -1,9 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import { merge } from 'webpack-merge';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack_common from './webpack.common.js';
-import html_plugin_conf from './webpack.html_plugin_conf.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
