@@ -82,9 +82,10 @@ if [[ $mode == "production" || $mode == "staging" ]]; then
     # Dev bestanden eruit
     git rm -r \
         assets/ \
+        data/ \
         deploy.sh \
-        package.json \
         package-lock.json \
+        package.json \
         src/ \
         tsconfig.json \
         webpack.* || exit 1
