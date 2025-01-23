@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as url from 'url';
 import { merge } from 'webpack-merge';
+import webpack from 'webpack';
 import webpack_common from './webpack.common.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -66,5 +67,10 @@ export default merge(webpack_common, {
         }
       }
     }
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify('https://webdev.gld.nl/remy/nimbus_io/api/nieuwskaart.php'),
+    }),
+  ],
 });

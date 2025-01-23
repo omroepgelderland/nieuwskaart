@@ -1,4 +1,5 @@
 import {merge} from 'webpack-merge';
+import webpack from 'webpack';
 import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
@@ -61,7 +62,10 @@ export default merge(webpack_common, {
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
       chunkFilename: '[id]-[contenthash].css'
-    })
+    }),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify('https://io.omroepgelderland.nl/api/nieuwskaart.php'),
+    }),
   ],
   optimization: {
     runtimeChunk: 'single',

@@ -1,6 +1,6 @@
 // Libraries js
 // import * as bootstrap from 'bootstrap';
-import L, { Icon, marker, Marker, MarkerClusterGroup } from 'leaflet';
+import L, { Icon, Marker, MarkerClusterGroup } from 'leaflet';
 import 'leaflet.markercluster';
 import Collapse from 'bootstrap/js/dist/collapse';
 
@@ -282,7 +282,7 @@ function getElementById<I extends keyof IDMap>(elementId: I): IDMap[I] {
 function post<T>(functie: string, data: RequestData = {}): Promise<T> {
   return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://webdev.gld.nl/remy/nimbus_io/api/nieuwskaart.php', true);
+      xhr.open('POST', API_URL, true);
       xhr.onload = (post_verwerk_respons<T>).bind(undefined, xhr, resolve, reject);
       xhr.onerror = (post_verwerk_respons<T>).bind(undefined, xhr, resolve, reject);
 
