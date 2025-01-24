@@ -1,11 +1,11 @@
 // Libraries js
 // import * as bootstrap from 'bootstrap';
-import L, { Icon, Marker, MarkerClusterGroup } from 'leaflet';
-import 'leaflet.markercluster';
-import Collapse from 'bootstrap/js/dist/collapse';
+import L, { Icon, Marker, MarkerClusterGroup } from "leaflet";
+import "leaflet.markercluster";
+import Collapse from "bootstrap/js/dist/collapse";
 
 // css
-import '/src/scss/index.scss';
+import "/src/scss/index.scss";
 
 // afbeeldingen
 import marker_icon_png from "leaflet/dist/images/marker-icon.png";
@@ -14,22 +14,22 @@ import marker_icon_png from "leaflet/dist/images/marker-icon.png";
 import gelderland_json from "../../data/gelderland.json";
 
 interface IDMap {
-  map: HTMLElement
-  overlay: HTMLElement
-  menuknop: HTMLButtonElement
-  menu: HTMLElement
-  van: HTMLInputElement
-  'van-help': HTMLElement
-  tot: HTMLInputElement
-  'tot-help': HTMLElement
+  map: HTMLElement;
+  overlay: HTMLElement;
+  menuknop: HTMLButtonElement;
+  menu: HTMLElement;
+  van: HTMLInputElement;
+  "van-help": HTMLElement;
+  tot: HTMLInputElement;
+  "tot-help": HTMLElement;
 }
 
-type RequestData = Record<string, string|number|boolean|null>|FormData;
+type RequestData = Record<string, string | number | boolean | null> | FormData;
 
 interface ServerArtikel {
-  nimbus_id: number
-  headline: string
-  location: [number, number]
+  nimbus_id: number;
+  headline: string;
+  location: [number, number];
 }
 
 class ServerError extends Error {}
@@ -38,7 +38,6 @@ class ServerError extends Error {}
  * Een artikel op de kaart met metadata en een Leaflet marker.
  */
 class KaartArtikel implements ServerArtikel {
-
   public marker: Marker;
   public e_a: HTMLAnchorElement;
 
@@ -49,11 +48,11 @@ class KaartArtikel implements ServerArtikel {
     marker_icon: Icon,
   ) {
     this.location = location;
-    this.e_a = document.createElement('a');
+    this.e_a = document.createElement("a");
     this.e_a.innerText = headline;
     this.e_a.href = `https://www.gld.nl/nieuws/${nimbus_id}`;
-    this.e_a.target = '_blank';
-    this.marker = L.marker(this.location, {icon: marker_icon});
+    this.e_a.target = "_blank";
+    this.marker = L.marker(this.location, { icon: marker_icon });
     this.marker.bindPopup(this.e_a);
   }
 
@@ -71,11 +70,8 @@ class KaartArtikel implements ServerArtikel {
   /**
    * Past de locatie aan als deze veranderd is.
    */
-  public set_location(location: KaartArtikel['location']): void {
-    if (
-      this.location[0] !== location[0]
-      || this.location[1] !== location[1]
-    ) {
+  public set_location(location: KaartArtikel["location"]): void {
+    if (this.location[0] !== location[0] || this.location[1] !== location[1]) {
       this.location = location;
       this.marker.setLatLng(location);
     }
@@ -83,7 +79,6 @@ class KaartArtikel implements ServerArtikel {
 }
 
 class Main {
-
   private map: L.Map;
   private marker_icon: L.Icon;
   private e_van: HTMLInputElement;
@@ -91,45 +86,42 @@ class Main {
   private menu_collapse;
   private artikelen_markers: Map<number, KaartArtikel>;
   private clustergroup?: MarkerClusterGroup;
-  private interval_id: number|null;
+  private interval_id: number | null;
 
   constructor() {
-    this.e_van = getElementById('van');
-    this.e_tot = getElementById('tot');
+    this.e_van = getElementById("van");
+    this.e_tot = getElementById("tot");
     this.artikelen_markers = new Map<number, KaartArtikel>();
-    this.menu_collapse = new Collapse(getElementById('menu'), {toggle: false});
+    this.menu_collapse = new Collapse(getElementById("menu"), {
+      toggle: false,
+    });
     this.interval_id = null;
 
     this.set_default_filter();
-    this.map = L.map(
-      'map', {
-        maxBounds: [
-          [52.62202502028203, 4.89385467421249],
-          [51.63358070699815, 6.932801619154944],
-        ],
-      }
-    ).setView(
-      [
-        52.083333,
-        5.916667
+    this.map = L.map("map", {
+      maxBounds: [
+        [52.62202502028203, 4.89385467421249],
+        [51.63358070699815, 6.932801619154944],
       ],
-      10
-    );
+    }).setView([52.083333, 5.916667], 10);
     this.marker_icon = L.icon({
-      iconUrl: marker_icon_png
+      iconUrl: marker_icon_png,
     });
 
-    document.querySelector('form')?.addEventListener('submit', this.filter_submit_handler.bind(this));
+    document
+      .querySelector("form")
+      ?.addEventListener("submit", this.filter_submit_handler.bind(this));
   }
 
   /**
    * Toont de kaart en start het proces dat artikelen laad en wijzigingen checkt.
    */
   public async show(): Promise<void> {
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.map);
-    
+
     // @ts-expect-error TS geeft error over geojson format
     L.geoJSON(gelderland_json).addTo(this.map);
     await this.restart_sync();
@@ -140,12 +132,15 @@ class Main {
       window.clearInterval(this.interval_id);
     }
     await this.sync_artikelen();
-    this.interval_id = window.setInterval(this.sync_artikelen.bind(this), 60*10**3);
+    this.interval_id = window.setInterval(
+      this.sync_artikelen.bind(this),
+      60 * 10 ** 3,
+    );
   }
 
   /**
    * Voegt nieuwe artikelen toe.
-   * @param artikelen 
+   * @param artikelen
    */
   private maak_artikelen_markers(artikelen: ServerArtikel[]) {
     const maak_cluster = this.clustergroup == null;
@@ -155,7 +150,7 @@ class Main {
         artikel.nimbus_id,
         artikel.headline,
         artikel.location,
-        this.marker_icon
+        this.marker_icon,
       );
       this.artikelen_markers.set(artikel.nimbus_id, kaartartikel);
       this.clustergroup.addLayer(kaartartikel.marker);
@@ -188,7 +183,7 @@ class Main {
     }
 
     // Van de kaart verwijderen
-    const markers = artikelen.map(artikel => artikel.marker);
+    const markers = artikelen.map((artikel) => artikel.marker);
     this.clustergroup.removeLayers(markers);
 
     // Uit de lijst verwijderen
@@ -202,7 +197,9 @@ class Main {
    */
   private async sync_artikelen() {
     const artikelen = await this.get_artikelen();
-    const artikelen_entries: [number, ServerArtikel][] = artikelen.map(artikel => [artikel.nimbus_id, artikel]);
+    const artikelen_entries: [number, ServerArtikel][] = artikelen.map(
+      (artikel) => [artikel.nimbus_id, artikel],
+    );
     const artikelen_map = new Map<number, ServerArtikel>(artikelen_entries);
 
     const bestaande_ids = new Set(this.artikelen_markers.keys());
@@ -212,9 +209,15 @@ class Main {
     const oude_ids = bestaande_ids.difference(actuele_ids);
     const zelfde_ids = actuele_ids.intersection(bestaande_ids);
 
-    const nieuwe_artikelen = Array.from(nieuwe_ids).map(id => assert_defined(artikelen_map.get(id)));
-    const oude_artikelen = Array.from(oude_ids).map(id => assert_defined(this.artikelen_markers.get(id)));
-    const zelfde_artikelen = Array.from(zelfde_ids).map(id => assert_defined(artikelen_map.get(id)));
+    const nieuwe_artikelen = Array.from(nieuwe_ids).map((id) =>
+      assert_defined(artikelen_map.get(id)),
+    );
+    const oude_artikelen = Array.from(oude_ids).map((id) =>
+      assert_defined(this.artikelen_markers.get(id)),
+    );
+    const zelfde_artikelen = Array.from(zelfde_ids).map((id) =>
+      assert_defined(artikelen_map.get(id)),
+    );
 
     // Nieuwe markers toevoegen
     this.maak_artikelen_markers(nieuwe_artikelen);
@@ -243,20 +246,20 @@ class Main {
    */
   private get_artikelen(): Promise<ServerArtikel[]> {
     const request = {
-      van: '',
-      tot: '',
+      van: "",
+      tot: "",
     };
-    if (this.e_van.value.trim() !== '') {
+    if (this.e_van.value.trim() !== "") {
       const van = new Date(this.e_van.value);
       van.setHours(12);
       request.van = van.toISOString();
     }
-    if (this.e_tot.value.trim() !== '') {
+    if (this.e_tot.value.trim() !== "") {
       const tot = new Date(this.e_tot.value);
       tot.setHours(12);
       request.tot = tot.toISOString();
     }
-    return post('get_artikelen', request);
+    return post("get_artikelen", request);
   }
 
   private async filter_submit_handler(event: Event): Promise<void> {
@@ -268,8 +271,8 @@ class Main {
 
 function getElementById<I extends keyof IDMap>(elementId: I): IDMap[I] {
   const elem = document.getElementById(elementId);
-  if ( elem === null ) {
-      throw new Error(`#${elementId} niet gevonden`);
+  if (elem === null) {
+    throw new Error(`#${elementId} niet gevonden`);
   }
   return elem as IDMap[I];
 }
@@ -279,21 +282,31 @@ function getElementById<I extends keyof IDMap>(elementId: I): IDMap[I] {
  */
 function post<T>(functie: string, data: RequestData = {}): Promise<T> {
   return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', API_URL, true);
-      xhr.onload = (post_verwerk_respons<T>).bind(undefined, xhr, resolve, reject);
-      xhr.onerror = (post_verwerk_respons<T>).bind(undefined, xhr, resolve, reject);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", API_URL, true);
+    xhr.onload = (post_verwerk_respons<T>).bind(
+      undefined,
+      xhr,
+      resolve,
+      reject,
+    );
+    xhr.onerror = (post_verwerk_respons<T>).bind(
+      undefined,
+      xhr,
+      resolve,
+      reject,
+    );
 
-      let send_data: FormData | string;
-      if ( data instanceof FormData ) {
-          data.append('functie', functie);
-          send_data = data;
-      } else {
-          data.functie = functie;
-          send_data = JSON.stringify(data);
-          xhr.setRequestHeader('Content-Type', 'application/json');
-      }
-      xhr.send(send_data);
+    let send_data: FormData | string;
+    if (data instanceof FormData) {
+      data.append("functie", functie);
+      send_data = data;
+    } else {
+      data.functie = functie;
+      send_data = JSON.stringify(data);
+      xhr.setRequestHeader("Content-Type", "application/json");
+    }
+    xhr.send(send_data);
   });
 }
 
@@ -306,23 +319,23 @@ function post_verwerk_respons<T>(
   xhr: XMLHttpRequest,
   resolve: (respons: T) => void,
   reject: (error: ServerError) => void,
-  _event: ProgressEvent
+  _event: ProgressEvent,
 ) {
   try {
-      const data = JSON.parse(xhr.response);
-      if ( data.error !== false ) {
-          reject(new ServerError(data.errordata));
-      } else {
-          resolve(data.data);
-      }
+    const data = JSON.parse(xhr.response);
+    if (data.error !== false) {
+      reject(new ServerError(data.errordata));
+    } else {
+      resolve(data.data);
+    }
   } catch {
-      reject(new ServerError(xhr.responseText));
+    reject(new ServerError(xhr.responseText));
   }
 }
 
-function assert_defined<T>(value: T|null|undefined): T {
+function assert_defined<T>(value: T | null | undefined): T {
   if (value == null) {
-    throw new Error('null error');
+    throw new Error("null error");
   }
   return value;
 }

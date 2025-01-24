@@ -50,6 +50,7 @@ if [[ $mode == "dev" ]]; then
     delete_dist_bestanden
     npx eslint src/ts/ || exit 1
     npx tsc --noEmit || exit 1
+    npx prettier src/ts/ --write || exit 1
     npx webpack --watch --config "webpack.$mode.js" || exit 1
 fi
 if [[ $mode == "production" || $mode == "staging" ]]; then
