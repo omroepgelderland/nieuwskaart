@@ -23,6 +23,7 @@ fi
 export NODE_ENV=development
 . ~/.nvm/nvm.sh
 nvm install node || exit 1
+npm install -g npm@latest || exit 1
 
 if [[ $mode == "production" ]]; then
     oude_versie="$(git tag --list 'v*' --sort=v:refname | tail -n1)"
@@ -42,12 +43,12 @@ if [[ $mode == "dev" ]]; then
         # vendor/bin/phpstan analyse || exit 1
         # php8.1 vendor/bin/phpcs --standard=ruleset.xml -n || exit 1
         
-        npm install npm@latest -g || exit 1
         npm install || exit 1
         npx update-browserslist-db@latest || exit 1
         npm audit fix
     fi
     delete_dist_bestanden
+    npx eslint src/ts/ || exit 1
     npx tsc --noEmit || exit 1
     npx webpack --watch --config "webpack.$mode.js" || exit 1
 fi
@@ -72,6 +73,7 @@ if [[ $mode == "production" || $mode == "staging" ]]; then
     # Webpack output
     export NODE_ENV=development
     npm ci || exit 1
+    npx eslint src/ts/ || exit 1
     npx tsc --noEmit || exit 1
     npx webpack --config "webpack.$mode.js" || exit 1
     git add -f public/ || exit 1
