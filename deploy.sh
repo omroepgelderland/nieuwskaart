@@ -11,9 +11,13 @@ projectnaam="$(basename "$projectdir")"
 tempdir="/tmp/dist_$projectnaam/"
 cd "$projectdir" || exit 1
 
+current_branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then
-    echo "Not on branch master"
-    exit 1
+    echo "Op branch $current_branch ipv master. Toch doorgaan? (j/n)"
+    read -r ans
+    if [[ $ans != "j" ]]; then
+        exit 1
+    fi
 fi
 
 ./deploy_dev.sh || exit 1
@@ -36,7 +40,7 @@ if [[ $mode == "production" ]]; then
     oude_versie="$(git tag --list 'v*' --sort=v:refname | tail -n1)"
     echo "De huidige versie is $oude_versie. Versieverhoging? (major|minor|patch|premajor|preminor|prepatch|prerelease) "
     read -r versie_type
-    nieuwe_versie="$(semver -i "$versie_type" "$oude_versie")"
+    nieuwe_versie="$(npx semver -i "$versie_type" "$oude_versie")" || exit 1
     git_versie="v$nieuwe_versie"
 fi
 
