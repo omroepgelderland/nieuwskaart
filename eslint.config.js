@@ -1,10 +1,10 @@
 // @ts-check
 
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config({
-  files: ['src/ts/**/*.ts'],
+  ignores: [],
   extends: [
     eslint.configs.recommended,
     tseslint.configs.recommended,
@@ -15,11 +15,19 @@ export default tseslint.config({
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "argsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "ignoreRestSiblings": true,
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+      },
+    ],
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        overrides: {
+          constructors: "no-public",
+        },
       },
     ],
   },
