@@ -11,7 +11,7 @@ import "/src/scss/index.scss";
 import marker_icon_png from "leaflet/dist/images/marker-icon.png";
 
 // data
-import gelderland_json from "../../data/gelderland.json";
+import gelderland_json from "../../data/provincie.json";
 
 interface IDMap {
   map: HTMLElement;
@@ -79,12 +79,12 @@ class KaartArtikel implements ServerArtikel {
 }
 
 class Main {
-  private map: L.Map;
-  private marker_icon: L.Icon;
-  private e_van: HTMLInputElement;
-  private e_tot: HTMLInputElement;
-  private menu_collapse;
-  private artikelen_markers: Map<number, KaartArtikel>;
+  private readonly map: L.Map;
+  private readonly marker_icon: L.Icon;
+  private readonly e_van: HTMLInputElement;
+  private readonly e_tot: HTMLInputElement;
+  private readonly menu_collapse;
+  private readonly artikelen_markers: Map<number, KaartArtikel>;
   private clustergroup?: MarkerClusterGroup;
   private interval_id: number | null;
 
@@ -110,6 +110,7 @@ class Main {
 
     document
       .querySelector("form")
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       ?.addEventListener("submit", this.filter_submit_handler.bind(this));
   }
 
@@ -133,6 +134,7 @@ class Main {
     }
     await this.sync_artikelen();
     this.interval_id = window.setInterval(
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.sync_artikelen.bind(this),
       60 * 10 ** 3,
     );
@@ -341,4 +343,4 @@ function assert_defined<T>(value: T | null | undefined): T {
 }
 
 const m = new Main();
-m.show();
+void m.show();

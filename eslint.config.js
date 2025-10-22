@@ -7,11 +7,15 @@ export default tseslint.config({
   ignores: [],
   extends: [
     eslint.configs.recommended,
-    tseslint.configs.recommended,
+    tseslint.configs.recommendedTypeChecked,
     tseslint.configs.strict,
     tseslint.configs.stylistic,
   ],
+  languageOptions: {
+    parserOptions: { projectService: true },
+  },
   rules: {
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -30,5 +34,8 @@ export default tseslint.config({
         },
       },
     ],
+    "@typescript-eslint/prefer-readonly": "error",
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": "error",
   },
 });

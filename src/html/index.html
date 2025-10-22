@@ -1,26 +1,54 @@
 <!doctype html>
 <html lang="nl-NL">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kaart</title>
-    
+
     <!--Favicons-->
-    <link rel="icon" type="image/png" href="/assets/afbeeldingen/favicon-192p.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/assets/afbeeldingen/favicon-16p.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/assets/afbeeldingen/favicon-32p.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/assets/afbeeldingen/favicon-96p.png" sizes="96x96">
-    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-120p.png">
-    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-180p.png">
-    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-152p.png">
-    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-167p.png">
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/afbeeldingen/favicon-192p.png"
+      sizes="192x192"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/afbeeldingen/favicon-16p.png"
+      sizes="16x16"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/afbeeldingen/favicon-32p.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/assets/afbeeldingen/favicon-96p.png"
+      sizes="96x96"
+    />
+    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-120p.png" />
+    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-180p.png" />
+    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-152p.png" />
+    <link rel="apple-touch-icon" href="/assets/afbeeldingen/favicon-167p.png" />
   </head>
   <body>
     <div id="map"></div>
     <div id="overlay">
-      <button type="button" class="btn btn-white" id="menuknop" data-bs-toggle="collapse" data-bs-target="#menu" aria-expanded="false" aria-controls="#menu">
+      <button
+        type="button"
+        class="btn btn-white"
+        id="menuknop"
+        data-bs-toggle="collapse"
+        data-bs-target="#menu"
+        aria-expanded="false"
+        aria-controls="#menu"
+      >
         <i class="bi bi-three-dots-vertical"></i>
       </button>
       <div class="collapse collapse-horizontal" id="menu">
@@ -29,12 +57,22 @@
           <form>
             <div class="mb-3">
               <label for="van" class="form-label">Van</label>
-              <input type="date" class="form-control" id="van" aria-describedby="van-help">
+              <input
+                type="date"
+                class="form-control"
+                id="van"
+                aria-describedby="van-help"
+              />
               <div id="van-help" class="form-text">Vanaf datum</div>
             </div>
             <div class="mb-3">
               <label for="tot" class="form-label">Tot</label>
-              <input type="date" class="form-control" id="tot" aria-describedby="tot-help">
+              <input
+                type="date"
+                class="form-control"
+                id="tot"
+                aria-describedby="tot-help"
+              />
               <div id="tot-help" class="form-text">Tot datum</div>
             </div>
             <button type="submit" class="btn btn-primary">Toepassen</button>

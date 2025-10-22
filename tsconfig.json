@@ -1,19 +1,18 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./",
-        "noEmit": true,
-        "module": "esnext",
-        "target": "esnext",
-        "allowJs": true,
-        "moduleResolution": "bundler",
-        "sourceMap": true,
-        "strict": true,
-        "allowUnreachableCode": false,
-        "noFallthroughCasesInSwitch": true,
-        "skipLibCheck": true,
-        "resolveJsonModule": true
-    },
-    "include": [
-        "src/ts/"
-    ]
+  "compilerOptions": {
+    "baseUrl": "./",
+    "noEmit": true,
+    "module": "esnext",
+    "target": "esnext",
+    "allowJs": true,
+    "moduleResolution": "bundler",
+    "sourceMap": true,
+    "strict": true,
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true
+  },
+  "include": ["src/ts/", "eslint.config.js"]
 }

@@ -1,76 +1,74 @@
-import * as path from 'path';
-import * as url from 'url';
-import { merge } from 'webpack-merge';
-import webpack from 'webpack';
-import webpack_common from './webpack.common.js';
+import * as path from "path";
+import * as url from "url";
+import { merge } from "webpack-merge";
+import webpack from "webpack";
+import webpack_common from "./webpack.common.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default merge(webpack_common, {
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: "development",
+  devtool: "inline-source-map",
   module: {
     rules: [
       {
         test: /\.(js|ts)$/i,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
               [
-                '@babel/preset-env',
+                "@babel/preset-env",
                 {
-                  targets: 'last 2 Chrome versions'
-                }
+                  targets: "last 2 Chrome versions",
+                },
               ],
-              '@babel/preset-typescript'
-            ]
-          }
-        }
+              "@babel/preset-typescript",
+            ],
+          },
+        },
       },
       {
         test: /\.css$/i,
-        use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader'
-        ],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
           {
-            loader: 'sass-loader',
+            loader: "sass-loader",
             options: {
               sassOptions: {
-                quietDeps: true
-              }
-            }
-          }
+                quietDeps: true,
+              },
+            },
+          },
         ],
-      }
-    ]
+      },
+    ],
   },
   optimization: {
-    runtimeChunk: 'single',
+    runtimeChunk: "single",
     splitChunks: {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
-      API_URL: JSON.stringify('https://webdev.gld.nl/remy/nimbus_io/api/nieuwskaart.php'),
+      API_URL: JSON.stringify(
+        "https://webdev.gld.nl/remy/nimbus_io/api/nieuwskaart.php",
+      ),
     }),
   ],
 });

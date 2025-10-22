@@ -11,20 +11,20 @@
   $green: gld-huisstijl.$gld-kleur-donkergroen,
   // $teal:;
   $cyan: gld-huisstijl.$gld-kleur-lichtblauw,
-  
+
   $primary: gld-huisstijl.$gld-kleur-corporate1,
   $link-color: gld-huisstijl.$gld-kleur-corporate2
 );
 
-@use "bootstrap-icons/font/bootstrap-icons.scss" with(
-  $bootstrap-icons-font-dir: "~bootstrap-icons/font/fonts"
-);
+@use "bootstrap-icons/font/bootstrap-icons.scss"
+  with($bootstrap-icons-font-dir: "~bootstrap-icons/font/fonts");
 
 @import "leaflet/dist/leaflet.css";
 @import "leaflet.markercluster/dist/MarkerCluster.css";
 @import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
   margin: 0;
