@@ -1,4 +1,6 @@
 #!/bin/bash
 # Updatescript voor de productieomgeving.
 
-git pull --rebase || exit 1
+set -euo pipefail
+
+git pull --rebase

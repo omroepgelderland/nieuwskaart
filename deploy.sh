@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 mode="$1"
 if [[ $mode != "production" && $mode != "staging" ]]; then
     echo "geen mode gespecifeerd"
@@ -9,7 +11,7 @@ fi
 projectdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 projectnaam="$(basename "$projectdir")"
 tempdir="/tmp/dist_$projectnaam/"
-cd "$projectdir" || exit 1
+cd "$projectdir"
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then
@@ -20,7 +22,7 @@ if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then
     fi
 fi
 
-./deploy_dev.sh || exit 1
+./deploy_dev.sh
 
 if [ -n "$(git status --untracked-files=no --porcelain)" ]; then
     git status
@@ -34,30 +36,30 @@ fi
 # nvm environment
 # shellcheck disable=SC1091
 . "$HOME/.nvm/nvm.sh"
-nvm install node || exit 1
+nvm install node
 
 # versieverhoging
 if [[ $mode == "production" ]]; then
     oude_versie="$(git tag --list 'v*' --sort=v:refname | tail -n1)"
     echo "De huidige versie is $oude_versie. Versieverhoging? (major|minor|patch|premajor|preminor|prepatch|prerelease) "
     read -r versie_type
-    nieuwe_versie="$(npx semver -i "$versie_type" "$oude_versie")" || exit 1
+    nieuwe_versie="$(npx semver -i "$versie_type" "$oude_versie")"
     git_versie="v$nieuwe_versie"
 fi
 
-git branch -D "$mode" 2>/dev/null
-git push origin --delete "$mode" 2>/dev/null
+git branch -D "$mode" 2>/dev/null || :
+git push origin --delete "$mode" 2>/dev/null || :
 git gc
 rm -rf "$tempdir"
-git clone . "$tempdir" || exit 1
-cd "$tempdir" || exit 1
+git clone . "$tempdir"
+cd "$tempdir"
 git checkout -b "$mode"
 
 # Webpack output
 export NODE_ENV=development
-npm ci || exit 1
-npx webpack --config "webpack.$mode.js" || exit 1
-git add -f public/ || exit 1
+npm ci
+npx webpack --config "webpack.$mode.js"
+git add -f public/
 
 # Dev bestanden eruit
 git rm -r \
@@ -70,19 +72,22 @@ git rm -r \
     package.json \
     src/ \
     tsconfig.json \
-    webpack.* || exit 1
+    webpack.*
 if [[ $mode == "production" ]]; then
-    git commit -m "[build] $git_versie" || exit 1
-    git tag "$git_versie" || exit 1
-    git push origin "$git_versie" || exit 1
+    git commit -m "[build] $git_versie"
+    git tag "$git_versie"
+    git push origin "$git_versie"
 fi
 if [[ $mode == "staging" ]]; then
-    git commit -m "[staging build]" || exit 1
+    git commit -m "[staging build]"
 fi
-git push origin "$mode" || exit 1
-cd "$projectdir" || exit 1
+git push origin "$mode"
+cd "$projectdir"
 rm -rf "$tempdir"
 if [[ $mode == "production" ]]; then
-    git push origin "$git_versie" || exit 1
+    git push origin "$git_versie"
 fi
-git push --force origin "$mode" || exit 1
+git push --force origin "$mode"
+if [[ $current_branch == "master" ]]; then
+    git push
+fi
