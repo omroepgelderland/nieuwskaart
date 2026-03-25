@@ -3,6 +3,7 @@ import * as url from "url";
 import { merge } from "webpack-merge";
 import webpack from "webpack";
 import webpack_common from "./webpack.common.js";
+import * as sass from "sass";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,8 +44,10 @@ export default merge(webpack_common, {
           {
             loader: "sass-loader",
             options: {
+              implementation: sass,
               sassOptions: {
                 quietDeps: true,
+                importers: [new sass.NodePackageImporter()],
               },
             },
           },

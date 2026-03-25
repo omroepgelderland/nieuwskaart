@@ -4,6 +4,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import webpack_common from "./webpack.common.js";
+import * as sass from "sass";
 
 export default merge(webpack_common, {
   mode: "production",
@@ -46,8 +47,10 @@ export default merge(webpack_common, {
           {
             loader: "sass-loader",
             options: {
+              implementation: sass,
               sassOptions: {
                 quietDeps: true,
+                importers: [new sass.NodePackageImporter()],
               },
             },
           },

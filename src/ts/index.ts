@@ -32,6 +32,16 @@ interface ServerArtikel {
   location: [number, number];
 }
 
+type ServerResponse<T> =
+  | {
+      error: false;
+      data: T;
+    }
+  | {
+      error: true;
+      errordata?: string;
+    };
+
 class ServerError extends Error {}
 
 /**
@@ -322,17 +332,42 @@ function post_verwerk_respons<T>(
   resolve: (respons: T) => void,
   reject: (error: ServerError) => void,
   _event: ProgressEvent,
-) {
+): void {
   try {
-    const data = JSON.parse(xhr.response);
-    if (data.error !== false) {
-      reject(new ServerError(data.errordata));
-    } else {
-      resolve(data.data);
+    const parsed: unknown = JSON.parse(xhr.responseText);
+
+    if (!is_server_respons<T>(parsed)) {
+      reject(new ServerError(xhr.responseText));
+      return;
     }
+
+    if (parsed.error) {
+      reject(new ServerError(parsed.errordata));
+      return;
+    }
+
+    resolve(parsed.data);
   } catch {
     reject(new ServerError(xhr.responseText));
   }
+}
+
+function is_server_respons<T>(value: unknown): value is ServerResponse<T> {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const v = value as Record<string, unknown>;
+
+  if (v.error === false) {
+    return "data" in v;
+  }
+
+  if (v.error === true) {
+    return !("errordata" in v) || typeof v.errordata === "string";
+  }
+
+  return false;
 }
 
 function assert_defined<T>(value: T | null | undefined): T {

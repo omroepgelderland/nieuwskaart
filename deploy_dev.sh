@@ -24,7 +24,7 @@ npm install npm@latest -g
 npm install
 npm update update-browserslist-db
 npx update-browserslist-db@latest
-npm audit fix
+npm audit fix || :
 
 # webpack compilen
 delete_dist_bestanden
